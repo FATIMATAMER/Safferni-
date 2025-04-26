@@ -31,13 +31,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
+    # my apps
+    'companyManagement',
+    'trips',
+    'userManagement',
+    'booking',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+   
 ]
+
+AUTH_USER_MODEL='userManagement.TypeUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
