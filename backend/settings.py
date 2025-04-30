@@ -23,28 +23,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o@3q7@3sr_nfk^z7&24y+tj#rgvdf^%5&+rnd*ngki0^vz7r*#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # django rest framework
     'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',  # For token blacklisting
+
     # my apps
     'companyManagement',
     'trips',
     'userManagement',
     'booking',
+
+    ###
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-   
 ]
 
 AUTH_USER_MODEL='userManagement.TypeUser'
