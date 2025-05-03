@@ -4,6 +4,7 @@ from django.db import models
 
 
 class Company(models.Model):
+    
     company_name=models.CharField(max_length=100)
     description=models.TextField(blank=True)
     phone_number=models.CharField(max_length=15)

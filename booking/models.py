@@ -4,6 +4,7 @@ from userManagement.models import TypeUser
 # Create your models here.
 
 class BookingUser(models.Model):
+    
     trip=models.ForeignKey(Trip,on_delete=models.CASCADE,related_name="bookings")
     user=models.ForeignKey(TypeUser, on_delete=models.CASCADE, related_name="bookings")
     seat_count=models.PositiveSmallIntegerField(default=1)
@@ -16,9 +17,5 @@ class BookingUser(models.Model):
     
     def __str__(self):
         return f" Booking for {self.user.username} - Seats : {self.seat_count} - Total price : {self.total_price}"
-
-
-
-
 
 
