@@ -5,7 +5,7 @@ from userManagement.models import TypeUser
 
 class BookingUser(models.Model):
     trip=models.ForeignKey(Trip,on_delete=models.CASCADE,related_name="bookings")
-    user=models.ForeignKey(TypeUser,on_delete=models.CASCADE,related_name="bookings")
+    user=models.ForeignKey(TypeUser, on_delete=models.CASCADE, related_name="bookings")
     seat_count=models.PositiveSmallIntegerField(default=1)
     total_price=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 

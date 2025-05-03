@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser, Group
 # Create your models here.
 
 class TypeUser(AbstractUser):
+    
     phone_number=models.CharField(max_length=15,blank=True,null=True)
 
     def assign_group(self):

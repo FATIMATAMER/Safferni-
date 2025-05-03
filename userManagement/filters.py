@@ -11,3 +11,4 @@ class UserFilter(django_filters.FilterSet):
             'username' : ['iexact', 'icontains'],
             'id' : ['exact', 'gt', 'lt', 'range'], 
         }
+        
