@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 from rest_framework import generics
 from .models import Trip
 from .serializers import TripSerializer
+=======
+from rest_framework import viewsets, generics
+from .models import Trip
+from .serializers import TripSerializer
+from .permissions import IsManager, IsEployee
+>>>>>>> 4a34b8fb11cf99b0744a39eb24fa9a02ab125f2d
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAdminUser,
     AllowAny
 )
+<<<<<<< HEAD
 
 
 class TripListView(generics.ListCreateAPIView):
@@ -23,3 +31,26 @@ class TripDetailView(generics.RetrieveUpdateDestroyAPIView):
 # class TripViewSet(viewsets.ModelViewSet):
 #     queryset=Trip.objects.all()
 #     serializer_class=TripSerializer
+=======
+
+
+class TripViewSet(viewsets.ModelViewSet):
+    
+    queryset=Trip.objects.all()
+    serializer_class=TripSerializer
+    permission_classes = [IsManager, IsAdminUser, IsAuthenticated]
+
+
+# class TripView(generics.RetrieveUpdateDestroyAPIView):
+
+#     queryset = Trip.objects.all()
+#     serializer_class = TripSerializer
+    
+#     def get_permissions(self):
+#         if self.request.method == 'GET':
+#             permission_classes = [AllowAny]
+#         else:
+#             permission_classes = [IsAuthenticated, IsManager]
+#         return [permission() for permission in permission_classes]
+    
+>>>>>>> 4a34b8fb11cf99b0744a39eb24fa9a02ab125f2d
