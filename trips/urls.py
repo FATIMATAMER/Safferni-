@@ -10,6 +10,8 @@ from . import api
 # ]
 
 urlpatterns = [
-    path('trips/', api.TripListView.as_view(), name='trip_list'),
-    path('trips/<int:pk>/', api.TripDetailView.as_view(), name='trip_detail'),
+
+    path('', api.api_overview),
+    path('create/', api.TripListView.as_view(), name='trip_list'),
+    path('detail/<int:pk>/', api.TripDetailView.as_view(), name='trip_detail'),
 ]

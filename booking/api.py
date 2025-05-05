@@ -8,6 +8,20 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 
 
+@api_view(['GET'])
+def api_overview(request):
+     
+	api_urls = {
+
+        'auth api overview' : '/',
+        'list and create new booking' : 'list/',
+        'Update, retreive and delete a bookings' : 'create/',
+        'List authenticated user bookings' : 'user/bookings',
+		}
+
+	return Response(api_urls)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # يجب أن يكون المستخدم مسجلاً للدخول إجبارية مسجل دخول 
 def create_booking(request):
@@ -72,6 +86,7 @@ class BookingListView(generics.ListAPIView):
 
 
 class UserBookingsView(generics.ListAPIView):
+
     serializer_class = BookingSerializer
     permission_classes = [IsAuthenticated]
 
