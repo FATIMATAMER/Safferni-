@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, serializers
 from .models import Trip, BookingUser
 from .serializers import BookingSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -66,6 +65,7 @@ class BookingCreateView(generics.CreateAPIView):
     
     def create(self, request, *args, **kwargs):
         trip_id = request.data.get('trip')
+        seat_number = request.data.get('seat_number')
         trip = Trip.objects.get(id=trip_id)
         
         # تحقق من المقاعد المتاحة

@@ -15,7 +15,7 @@ class Trip(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.origin} → {self.destination} ({self.departure_time.strftime('%Y-%m-%d %H:%M')})"
+        return f"{self.origin} → {self.destination} ({self.departure_time.strftime('%Y-%m-%d %H:%M')}) - {self.company.company_name}"
     
     class Meta:
         
