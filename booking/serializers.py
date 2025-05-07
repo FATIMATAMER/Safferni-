@@ -1,30 +1,55 @@
 from rest_framework import serializers
 from .models import BookingUser
+from trips.serializers import TripSerializer
+from django.utils import timezone
+from datetime import datetime
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingUser
-        fields = ['id', 'trip', 'passenger', 'seat_number', 'booking_time']
-        read_only_fields = ['booking_time']
-    
-    def create(self, validated_data):
-# التحقق من وجود مقاعد متاحة بصير هون 
-        trip = validated_data['trip']
-        if trip.available_seats <= 0:
-            raise serializers.ValidationError('No available seats for this trip.')
-        
-    #هون مشان  تحديد المقعد 
-        seat_number = validated_data['seat_number']
-        
-      # التحقق من أن المقعد متاح و بعدها بتم الحجز ان كان متاح 
-        if BookingUser.objects.filter(trip=trip, seat_number=seat_number).exists():
-            raise serializers.ValidationError('This seat is already booked.')
-        
-        #ناقص تحديث عدد المقاعد المتاحة
-        trip.available_seats -= 1
-        trip.save()
 
-        # إنشاء الحجز
-        booking = BookingUser.objects.create(**validated_data)
-        return booking
+    bus_details = TripSerializer(source='bus', read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
+    total_price = serializers.SerializerMethodField()
+    
+    class Meta:
+
+        model = BookingUser
+        fields = [
+            'id', 'user', 'trip', 'bus_details', 'booking_date',
+            'number_of_seats', 'is_cancelled', 'cancellation_date',  'total_price',
+        ]
+        read_only_fields = ['booking_date', 'is_cancelled', 'cancellation_date']
+        extra_kwargs = {
+            'bus': {'write_only': True}
+        }
+
+    def get_total_price(self, obj):
+
+        """Calculate total price for all remaining seats"""
+        # If we annotated in the queryset
+        if hasattr(obj, 'total_price'):
+            return obj.total_price
+        # Fallback calculation
+        return obj.bus.price * obj.number_of_seats
+
+    def validate(self, data):
+
+        trip = data.get('trip')
+        number_of_seats = data.get('number_of_seats')
+        
+        if trip.departure_date < timezone.now().date():
+            raise serializers.ValidationError("Cannot book for past dates.")
+        
+        if trip.departure_date and trip.departure_date == timezone.now().date():
+            if trip.departure_date < timezone.now().time():
+                raise serializers.ValidationError("The trip has already departed.")
+        
+        if number_of_seats > trip.available_seats:
+            raise serializers.ValidationError(
+                f"Only {trip.available_seats} seat(s) available."
+            )
+        
+        if number_of_seats <= 0:
+            raise serializers.ValidationError("Number of seats must be at least 1.")
+            
+        return data

@@ -1,12 +1,15 @@
-from django.urls import path
-from .api import UserBookingsView, BookingCreateView, BookingListView, api_overview, create_booking
+from . import api
+from rest_framework.routers import DefaultRouter
 
+from django.urls import path, include
+
+
+router = DefaultRouter()
+router.register(r'book', api.BookingViewSet, basename='book')
 
 urlpatterns = [
 
-    path('', api_overview),
-    path('list/', BookingListView.as_view(), name='booking_list'),
-    path('c', create_booking),
-    path('create/', BookingCreateView.as_view(), name='booking_create'),
-    path('user/bookings/', UserBookingsView.as_view(), name='user-bookings'),
+    path('', api.api_overview, name='make_reservation_overview'),
+    path('me/', api.UserBookingsView.as_view(), name='user_bookings'),
+    path('', include(router.urls)),
 ]
