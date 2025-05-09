@@ -55,5 +55,12 @@ class BookingSerializer(serializers.ModelSerializer):
             
         return data
     
- 
+    def get_assigned_seats(self, obj):
+        # Assuming we track the seat range at booking creation
+        if hasattr(obj, 'assigned_seats'):
+            return obj.assigned_seats  # from context
+        elif hasattr(obj, 'seat_start') and hasattr(obj, 'seat_end'):
+            return list(range(obj.seat_start, obj.seat_end + 1))
+        return []
+    
     
