@@ -12,7 +12,7 @@ class BookingUser(models.Model):
 
     user = models.ForeignKey(TypeUser, on_delete=models.CASCADE, related_name='bookings')
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='bookings')
-    booking_date = models.DateTimeField(default=datetime.now())
+    booking_date = models.DateTimeField(default=datetime.now)
     number_of_seats = models.PositiveIntegerField()
     is_cancelled = models.BooleanField(default=False)
     cancellation_date = models.DateTimeField(null=True, blank=True)
@@ -45,7 +45,7 @@ class BookingUser(models.Model):
             # Check if user already has an active booking for this bus
             existing_booking = BookingUser.objects.filter(
                 user=self.user,
-                bus=self.bus,
+                trip=self.trip,
                 is_cancelled=False
             ).exclude(pk=self.pk).exists()
             

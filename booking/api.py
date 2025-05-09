@@ -15,6 +15,7 @@ def api_overview(request):
 	api_urls = {
 
         'auth api overview' : '/',
+        'List authenticated user bookings' : 'me/',
         'create bookings' : 'book/',
         'Update, retreive and delete a bookings' : 'book/<int:id>',
 		}
@@ -31,16 +32,27 @@ class BookingViewSet(viewsets.ModelViewSet):
         return BookingUser.objects.filter(user=self.request.user).order_by('-booking_date')
     
     def perform_create(self, serializer):
+        
         trip = serializer.validated_data['trip']
         number_of_seats = serializer.validated_data['number_of_seats']
-        
-        # Create the booking
+
+        # Calculate assigned seats
+        seat_start = trip.total_seats - trip.available_seats + 1
+        seat_end = seat_start + number_of_seats - 1
+        assigned_seats = list(range(seat_start, seat_end + 1))
+
+        # Save the booking with user info
         booking = serializer.save(user=self.request.user)
-        
-        # Update bus seats
+
+        # Attach assigned_seats for serializer use (not saved in DB)
+        booking.assigned_seats = assigned_seats
+        booking.seat_start = seat_start
+        booking.seat_end = seat_end
+
+        # Update available seats
         trip.available_seats -= number_of_seats
         trip.save()
-    
+
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
         booking = self.get_object()

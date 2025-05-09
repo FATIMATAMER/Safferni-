@@ -1,6 +1,6 @@
 from django.db import models
 from companyManagement.models import Company
-from datetime import time
+from datetime import time, datetime
 
 
 # Create your models here.
@@ -10,7 +10,7 @@ class Trip(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='trips')
     origin = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
-    departure_date = models.DateField()
+    departure_date = models.DateTimeField(default=datetime.now)
     time_of_travel = models.TimeField()
     total_seats = models.IntegerField()
     available_seats = models.IntegerField(default=total_seats)
