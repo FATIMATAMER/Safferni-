@@ -44,10 +44,9 @@ def api_overview(request):
 class RegistrationView(APIView):
 
     permission_classes = [AllowAny]
-    serializer_class = UserRegistrationSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             

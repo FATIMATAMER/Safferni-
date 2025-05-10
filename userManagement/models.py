@@ -7,8 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class TypeUser(AbstractUser):
     
-    phone_number = PhoneNumberField()
-    password2 = models.CharField(max_length=300, blank=False, null=False)
+    phone_number = PhoneNumberField(blank=False, null=False)
     
     def assign_group(self):
 

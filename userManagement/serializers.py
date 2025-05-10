@@ -36,36 +36,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
+
     username = serializers.CharField()
     password = serializers.CharField(style={'input_type': 'password'})
 
-
-# class UserCreateSerializer(serializers.ModelSerializer):
-
-#     password = serializers.CharField(write_only=True)
-    
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'email', 'password')
-    
-#     def validate(self, data):
-#         user = User(**data)
-#         password = data.get('password')
-        
-#         try:
-#             validate_password(password, user)
-#         except exceptions.ValidationError as e:
-#             serializer_errors = serializers.as_serializer_error(e)
-#             raise serializers.ValidationError(
-#                 {'password': serializer_errors['non_field_errors']}
-#             )
-        
-#         return data
-    
-#     def create(self, validated_data):
-#         user = User.objects.create_user(
-#             username=validated_data['username'],
-#             email=validated_data['email'],
-#             password=validated_data['password']
-#         )
-#         return user
