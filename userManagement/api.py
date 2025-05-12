@@ -7,7 +7,6 @@ from rest_framework.permissions import (
     AllowAny
 )
 from .models import TypeUser
-from rest_framework.authtoken.models import Token
 from .filters import UserFilter
 from .serializers import UserLoginSerializer, UserRegistrationSerializer
 from rest_framework.views import APIView

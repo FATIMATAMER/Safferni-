@@ -1,9 +1,8 @@
-from datetime import timezone
+from django.utils import timezone
 from django.db import models
 from userManagement.models import TypeUser
 from trips.models import Trip
 from django.core.exceptions import ValidationError
-from datetime import datetime
 
 # Create your models here.
 
@@ -12,7 +11,7 @@ class BookingUser(models.Model):
 
     user = models.ForeignKey(TypeUser, on_delete=models.CASCADE, related_name='bookings')
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='bookings')
-    booking_date = models.DateTimeField(default=datetime.now)
+    booking_date = models.DateTimeField(default=timezone.now)
     number_of_seats = models.PositiveIntegerField()
     is_cancelled = models.BooleanField(default=False)
     cancellation_date = models.DateTimeField(null=True, blank=True)
@@ -24,6 +23,8 @@ class BookingUser(models.Model):
         verbose_name_plural = "Bookings"
 
     def save(self,*args, **kwargs):
+
+        # self.full_clean()
         if self.trip:
             self.total_price=self.number_of_seats * self.trip.price
         return super().save(*args, **kwargs)
@@ -61,6 +62,13 @@ class BookingUser(models.Model):
             
             if self.number_of_seats > self.trip.available_seats:
                 raise ValidationError(f"Only {self.trip.available_seats} seat(s) available.")
+            
+    def delete(self, *args, **kwargs):
+
+        if not self.is_cancelled:
+            self.trip.available_seats += self.number_of_seats
+            self.trip.save()
+        super().delete(*args, **kwargs)
             
     def __str__(self):
         

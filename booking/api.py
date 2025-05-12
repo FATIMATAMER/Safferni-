@@ -1,12 +1,12 @@
-from rest_framework import generics, serializers, viewsets, permissions
-from .models import Trip, BookingUser
+from rest_framework import generics, viewsets, permissions
+from .models import BookingUser
 from .serializers import BookingSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from datetime import datetime, timezone
+from django.utils import timezone
 
-from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.decorators import api_view, action
 
 
 @api_view(['GET'])
@@ -63,7 +63,7 @@ class BookingViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        if booking.trip.booking_date < timezone.now().date():
+        if booking.trip.departure_date < timezone.now():
             return Response(
                 {"detail": "Cannot cancel booking for past trips."},
                 status=status.HTTP_400_BAD_REQUEST
@@ -82,6 +82,16 @@ class BookingViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
     
+    def destroy(self, request, *args, **kwargs):
+        
+        booking = self.get_object()
+
+        if not booking.is_cancelled:
+            booking.trip.available_seats += booking.number_of_seats
+            booking.trip.save()
+
+        return super().destroy(request, *args, **kwargs)
+        
 
 class UserBookingsView(generics.ListAPIView):
 
