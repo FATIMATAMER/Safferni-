@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import BookingUser
+from trips.models import Trip
 from trips.serializers import TripSerializer
 from django.utils import timezone
+from django.db import models
 
 
 class BookingSerializer(serializers.ModelSerializer):
+
     trip_details = TripSerializer(source='trip', read_only=True)
     user = serializers.StringRelatedField(read_only=True)
     total_price = serializers.SerializerMethodField()
@@ -28,8 +31,12 @@ class BookingSerializer(serializers.ModelSerializer):
         return obj.trip.price * obj.number_of_seats
 
     def validate(self, data):
+
         trip = data.get('trip')
         number_of_seats = data.get('number_of_seats')
+        user = self.context['request'].user
+        number_of_seats = data.get('number_of_seats')
+
 
         if trip.departure_date < timezone.now():
             raise serializers.ValidationError("Cannot book a trip that has already departed.")
@@ -41,13 +48,32 @@ class BookingSerializer(serializers.ModelSerializer):
 
         if number_of_seats <= 0:
             raise serializers.ValidationError("Number of seats must be at least 1.")
+        
+        if BookingUser.objects.filter(user=user, trip=trip, is_cancelled=False).exists():
+            raise serializers.ValidationError("You have already booked in this trip.")
+
+        # Rule 2: Maximum 5 seats per booking
+        if number_of_seats > 5:
+            raise serializers.ValidationError("You cannot book more than 5 seats at once.")
+        
+        booked_seats = BookingUser.objects.filter(trip=trip, is_cancelled=False).aggregate(
+            total = models.Sum('number_of_seats')
+        )['total'] or 0
+
+        available_seats = trip.total_seats - booked_seats
+
+        if number_of_seats > available_seats:
+            raise serializers.ValidationError({
+                'number_of_seats': f"Only {available_seats} seats are available on this trip."
+            })
 
         return data
+    
 
+    
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-
     
     def get_assigned_seats(self, obj):
         # Step 1: Get all bookings for the same trip, ordered by booking date (or ID)
