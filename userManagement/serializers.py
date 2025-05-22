@@ -9,15 +9,15 @@ User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
-    password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    # password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     class Meta:
         model = TypeUser
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'phone_number', 'password', 'password2']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'phone_number', 'password']
     
     def validate(self, data):
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        # if data['password'] != data['password2']:
+        #     raise serializers.ValidationError({"password": "Password fields didn't match."})
         
         user = TypeUser(**data)
         password = data.get('password')
@@ -30,7 +30,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return data
     
     def create(self, validated_data):
-        validated_data.pop('password2')
+        # validated_data.pop('password2')
         user = TypeUser.objects.create_user(**validated_data)
         return user
 
