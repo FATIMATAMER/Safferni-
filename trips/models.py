@@ -4,6 +4,7 @@ from companyManagement.models import Company
 
 
 class Trip(models.Model):
+    
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='trips')
     origin = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
