@@ -1,10 +1,10 @@
 
-Required installations :
+#Required installations :
 
-Pip install django
-Pip install django-filter
-Pip install django-phonenumber-field[phonenumberslite]
-Pip install djangorestframework
-Pip install djangorestframework-simplejwt
-Pip install djangorestframework pillow
+ django
+ django-filter
+ django-phonenumber-field[phonenumberslite]
+ djangorestframework
+ djangorestframework-simplejwt
+ pillow
 

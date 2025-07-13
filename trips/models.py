@@ -26,7 +26,7 @@ class Trip(models.Model):
             raise ValidationError("Available seats cannot be negative.")
 
     def __str__(self):
-        return f"{self.origin} → {self.destination} ({self.departure_date}) - {self.company.company_name}"
+        return f"{self.destination} → {self.origin} ({self.departure_date}) - {self.company.company_name}"
 
     class Meta:
         verbose_name = "Trip"
