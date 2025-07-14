@@ -25,6 +25,7 @@ def api_overview(request):
 
 class BookingViewSet(viewsets.ModelViewSet):
     
+    throttle_scope = 'book'
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]
     

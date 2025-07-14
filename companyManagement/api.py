@@ -25,6 +25,7 @@ def api_overview(request):
 
 class CompanyViewSet(viewsets.ModelViewSet):
 
+    throttle_scope = 'company'
     queryset=Company.objects.all()
     serializer_class=CompanySerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
