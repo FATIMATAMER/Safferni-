@@ -24,6 +24,8 @@ def api_overview(request):
 
 
 class TripListView(generics.ListCreateAPIView):
+
+    throttle_scope = 'trip'
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
     permission_classes = [IsAuthenticatedOrReadOnly | IsManager | IsAdminUser]

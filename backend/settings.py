@@ -165,7 +165,8 @@ REST_FRAMEWORK = {
         'anon': '10/hour',
         'user': '10/minute',
         'book': '10/hour',
-        'company': '10/hour',
+        'company': '10/minute',
+        'trip': '10/minute',
     },
 }
 
