@@ -8,12 +8,13 @@ from django.core import exceptions
 User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
-    # password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    role = serializers.CharField(read_only=True)
 
     class Meta:
         model = TypeUser
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'phone_number', 'password']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'phone_number', 'password', 'role']
     
     def validate(self, data):
         # if data['password'] != data['password2']:

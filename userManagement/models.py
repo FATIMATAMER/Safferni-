@@ -11,10 +11,19 @@ class TypeUser(AbstractUser):
     def assign_group(self):
 
         if not self.groups.exists():
-            group_name="Employees" if self.is_staff else "Customers"
+            group_name="EMPLOYEE" if self.is_staff else "CUSTOMER"
             group,created=Group.objects.get_or_create(name=group_name)
             self.groups.add(group)
 
     def __str__(self):
-        return f"{self.username} ({'Employee' if self.is_staff else 'Customer'})"
+        return f"{self.username}"
+    
+    @property
+    def role(self):
+        if self.groups.filter(name="MANAGER").exists():
+            return "manager"
+        elif self.groups.filter(name="EMPLOYEE").exists():
+            return "employee"
+        else:
+            return "customer"
     
