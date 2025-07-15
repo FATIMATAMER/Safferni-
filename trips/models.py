@@ -21,9 +21,9 @@ class Trip(models.Model):
 
     def clean(self):
         if self.total_seats <= 0:
-            raise ValidationError("Total seats must be greater than 0.")
+            raise ValidationError("عدد المقاعد الكلي يجب أن يكون أكبر من 0")
         if self.available_seats < 0:
-            raise ValidationError("Available seats cannot be negative.")
+            raise ValidationError("المقاعد المتوفرة لا يجب أن تكون سالبة")
 
     def __str__(self):
         return f"{self.destination} → {self.origin} ({self.departure_date}) - {self.company.company_name}"

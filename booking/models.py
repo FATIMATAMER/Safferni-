@@ -51,17 +51,17 @@ class BookingUser(models.Model):
             ).exclude(pk=self.pk).exists()
             
             if existing_booking:
-                raise ValidationError("You already have an active booking for this bus.")
+                raise ValidationError("أنت بالفعل لديك حجز نشط في هذه الرحلة")
             
             # Validate seat limit
             if self.number_of_seats > 8:
-                raise ValidationError("Maximum 8 seats per booking.")
+                raise ValidationError("عدد المقاعد الأكبر الذي يمكنه حجزه في الرحلة الواحدة هو 8")
             
             if self.number_of_seats <= 0:
-                raise ValidationError("Number of seats must be at least 1.")
+                raise ValidationError("عدد المقاعد يجب أن يكون على الأقل 1")
             
             if self.number_of_seats > self.trip.available_seats:
-                raise ValidationError(f"Only {self.trip.available_seats} seat(s) available.")
+                raise ValidationError(f"فقط {self.trip.available_seats} مقاعد متوفرة")
             
     def delete(self, *args, **kwargs):
 
@@ -72,6 +72,6 @@ class BookingUser(models.Model):
             
     def __str__(self):
         
-        return f"Booking: {self.user.username} for {self.trip} (Seat {self.number_of_seats})"
+        return f"الحجز : {self.user.username} من أجل {self.trip} (مقعد {self.number_of_seats})"
     
 

@@ -1,11 +1,15 @@
 from rest_framework import generics, viewsets, permissions
 from .models import BookingUser
 from .serializers import BookingSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated 
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
-
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAdminUser,
+    AllowAny
+)
 from rest_framework.decorators import api_view, action
 
 
@@ -27,7 +31,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     
     throttle_scope = 'book'
     serializer_class = BookingSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AllowAny]
     
     def get_queryset(self):
         return BookingUser.objects.filter(user=self.request.user).order_by('-booking_date')
@@ -60,26 +64,26 @@ class BookingViewSet(viewsets.ModelViewSet):
         
         if booking.is_cancelled:
             return Response(
-                {"detail": "Booking is already cancelled."},
+                {"التفاصيل": "الحجز تم إلغاءه بالفعل"},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         if booking.trip.departure_date < timezone.now():
             return Response(
-                {"detail": "Cannot cancel booking for past trips."},
+                {"التفاصيل": "لا يمكن إلغاء الحجز للرحلات السابقة"},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         if booking.trip.departure_date == timezone.now().date():
             if booking.trip.departure_date and booking.trip.departure_date < timezone.now().time():
                 return Response(
-                    {"detail": "Cannot cancel booking as the bus has already departed."},
+                    {"التفاصيل": "لا يمكنك إلغاء حجز رحلة إنطلقت بالفعل"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         
         booking.cancel()
         return Response(
-            {"detail": "Booking cancelled successfully."},
+            {"التفاصيل": "تم إلغاء الحجز بنجاح"},
             status=status.HTTP_200_OK
         )
     
@@ -97,7 +101,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 class UserBookingsView(generics.ListAPIView):
 
     serializer_class = BookingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return BookingUser.objects.filter(user=self.request.user)

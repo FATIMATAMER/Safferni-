@@ -39,22 +39,22 @@ class BookingSerializer(serializers.ModelSerializer):
 
 
         if trip.departure_date < timezone.now():
-            raise serializers.ValidationError("Cannot book a trip that has already departed.")
+            raise serializers.ValidationError("لا يمكنك حجز رحلة إنطلقت بالفعل")
 
         if number_of_seats > trip.available_seats:
             raise serializers.ValidationError(
-                f"Only {trip.available_seats} seat(s) available."
+                f"فقط {trip.available_seats} مقاعد متوفرة"
             )
 
         if number_of_seats <= 0:
-            raise serializers.ValidationError("Number of seats must be at least 1.")
+            raise serializers.ValidationError("عدد المقاعد يجب أن يكون على الأقل 1")
         
         if BookingUser.objects.filter(user=user, trip=trip, is_cancelled=False).exists():
-            raise serializers.ValidationError("You have already booked in this trip.")
+            raise serializers.ValidationError("لقد قمت بالفعل بالحجز بهذه الرحلة")
 
         # Rule 2: Maximum 5 seats per booking
         if number_of_seats > 5:
-            raise serializers.ValidationError("You cannot book more than 5 seats at once.")
+            raise serializers.ValidationError("لا يمكنك ان تقوم بحجز أكثر من 5 مقاعد في الطلب الواحد")
         
         booked_seats = BookingUser.objects.filter(trip=trip, is_cancelled=False).aggregate(
             total = models.Sum('number_of_seats')
@@ -64,7 +64,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
         if number_of_seats > available_seats:
             raise serializers.ValidationError({
-                'number_of_seats': f"Only {available_seats} seats are available on this trip."
+                'number_of_seats': f"فقط {available_seats} مقاعد متوفرة بهذه الرحلة "
             })
 
         return data
