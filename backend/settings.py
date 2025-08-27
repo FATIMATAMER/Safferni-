@@ -162,10 +162,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '10/hour',
-        'user': '10/minute',
-        'book': '10/hour',
-        'company': '10/hour',
+        'anon': '60/hour',
+        'user': '60/minute',
+        'book': '60/hour',
+        'company': '60/hour',
     },
 }
 
