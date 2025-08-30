@@ -161,11 +161,13 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',
         'rest_framework.throttling.ScopedRateThrottle',
     ],
+
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '60/hour',
+        'anon': '2/hour',
         'user': '60/minute',
         'book': '60/hour',
         'company': '60/hour',
+        'trip': '60/hour',
     },
 }
 
