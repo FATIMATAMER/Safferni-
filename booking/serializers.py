@@ -53,6 +53,14 @@ class BookingSerializer(serializers.ModelSerializer):
         # Rules for new bookings (POST) and updates (PATCH)
         # Check if is_cancelled is present in data (only for PATCH request)
         if 'is_cancelled' in data and data.get('is_cancelled') is True:
+
+            booked_seats = BookingUser.objects.filter(trip=trip, is_cancelled=False).aggregate(
+                total = models.Sum('number_of_seats')
+            )['total'] or 0
+
+            trip.available_seats += booked_seats
+            trip.save()
+            
             # Logic specific to cancellation
             if trip.departure_date < timezone.now():
                 raise serializers.ValidationError({"is_cancelled": "Cannot cancel a booking for a trip that has already departed."})
