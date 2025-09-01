@@ -44,12 +44,13 @@ class BookingSerializer(serializers.ModelSerializer):
         number_of_seats = data.get('number_of_seats')
 
         # إذا لم يتم العثور على الرحلة، أرسل خطأ.
+
         if trip is None:
             raise serializers.ValidationError({"detail": "Trip not found in validation data."})
 
         # **ملاحظة:** الكود التالي أصبح آمناً الآن
         # لأننا تأكدنا من أن `trip` ليس None
-        
+
         # Rules for new bookings (POST) and updates (PATCH)
         # Check if is_cancelled is present in data (only for PATCH request)
         if 'is_cancelled' in data and data.get('is_cancelled') is True:
@@ -58,14 +59,15 @@ class BookingSerializer(serializers.ModelSerializer):
                 total = models.Sum('number_of_seats')
             )['total'] or 0
 
-            trip.available_seats += booked_seats
-            trip.save()
+            if self.instance:
+                trip.available_seats += self.instance.number_of_seats
+                trip.save()
             
             # Logic specific to cancellation
             if trip.departure_date < timezone.now():
                 raise serializers.ValidationError({"is_cancelled": "Cannot cancel a booking for a trip that has already departed."})
             return data
-        
+
         # Rules for new bookings (POST) - if 'trip' is in data, it's a new booking
         if 'trip' in data:
             number_of_seats = data.get('number_of_seats')
@@ -122,7 +124,10 @@ class BookingSerializer(serializers.ModelSerializer):
 
         return assigned_seats
     
-from rest_framework import serializers
+
+####################################################################################
+
+# from rest_framework import serializers
 # from .models import BookingUser
 # from trips.models import Trip
 # from trips.serializers import TripSerializer
