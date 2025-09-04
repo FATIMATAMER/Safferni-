@@ -11,4 +11,6 @@ urlpatterns = [
     path('register/', api.RegistrationView.as_view(), name='register'),
     path('login/', api.LoginView.as_view(), name='login'),
     path('logout/', api.LogoutView.as_view(), name='auth_logout'),
+    path('password_reset/request/',api.PasswordResetRequestView.as_view(),name='password_reset_request'),
+    path('password_reset/confirm/',api.PasswordResetConfirmRequestView.as_view(),name='password_reset_confirm'),
 ]   
