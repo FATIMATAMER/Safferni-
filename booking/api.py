@@ -60,26 +60,26 @@ class BookingViewSet(viewsets.ModelViewSet):
         
         if booking.is_cancelled:
             return Response(
-                {"detail": "Booking is already cancelled."},
+                {"detail": "الحجز تم إلغاءه بالفعل."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         if booking.trip.departure_date < timezone.now():
             return Response(
-                {"detail": "Cannot cancel booking for past trips."},
+                {"detail": "لا يمكنك إلغاء حجز رحلة سابقة ."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         if booking.trip.departure_date == timezone.now().date():
             if booking.trip.departure_date and booking.trip.departure_date < timezone.now().time():
                 return Response(
-                    {"detail": "Cannot cancel booking as the bus has already departed."},
+                    {"detail": "لا يمكنك إلغاء الحجز لأن الباص قد إنطلق بالفعل ."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         
         booking.cancel()
         return Response(
-            {"detail": "Booking cancelled successfully."},
+            {"detail": "تم إلغاء الحجز بنجاح ."},
             status=status.HTTP_200_OK
         )
     

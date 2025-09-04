@@ -113,7 +113,7 @@ class LoginView(APIView):
                 return response
             
             return Response(
-                {'error': 'Invalid credentials'}, 
+                {'error': 'بيانات اعتماد غير صالحة.'}, 
                 status=status.HTTP_401_UNAUTHORIZED
             )
         
@@ -157,7 +157,7 @@ class LogoutView(APIView):
             
             # Prepare response
             response = Response(
-                {'detail': 'Successfully logged out'},
+                {'detail': 'تم تسجيل الخروج بنجاح .'},
                 status=status.HTTP_205_RESET_CONTENT
             )
             
@@ -168,12 +168,12 @@ class LogoutView(APIView):
         
         except TokenError as e:
             return Response(
-                {'error': 'Invalid token', 'details': str(e)},
+                {'error': 'رمز غير صالح ', 'details': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             return Response(
-                {'error': 'Logout failed', 'details': str(e)},
+                {'error': 'فشل تسجيل الخروج ', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
