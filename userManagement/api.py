@@ -35,6 +35,8 @@ def api_overview(request):
 		'get authenticated user' : '/user/',
         'get and add users only by admins' : '/get_add_users/',
         'get and add users by id only by admins' : '/get_update_delete_user/<str:pk>/',
+        'request':'/password_reset/request',
+        'confirm':'/password_reset/confirm/',
 		}
 
 	return Response(api_urls)
@@ -237,10 +239,6 @@ class UserDetailView(APIView):
 
 
 # forgot your password ?
-
-from .serializers import PasswordResetRequestSerializer,PasswordResetConfirmSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
 
 # Create your views here.
 class PasswordResetRequestView(APIView):

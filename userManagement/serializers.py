@@ -55,6 +55,7 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
+   
    email=serializers.EmailField(required=True)
 
    def validate_email(self,value):
@@ -67,6 +68,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
            
        
    def save(self):
+       
        email=self.validated_data['email']
        user=User.objects.get(email=email)
        # انشاء token
@@ -86,10 +88,12 @@ class PasswordResetRequestSerializer(serializers.Serializer):
        
    # تأكيد عملية تغيير كلمة المرور                                                                                                   
 class PasswordResetConfirmSerializer(serializers.Serializer):
+
     uid = serializers.CharField(required=True)
     token = serializers.CharField(required=True)
     new_password=serializers.CharField(required=True, write_only=True, validators=[validate_password])
     new_password_confirm=serializers.CharField(required=True, write_only=True)
+
     def validate(self, data):
       
         if data['new_password']!=data['new_password_confirm']:
@@ -102,6 +106,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         if not default_token_generator.check_token(user,data['token']):
             raise serializers.ValidationError({" token" : "الرابط غير صالح او منتهي الصلاحية" })
         return data
+    
     def save(self):
         uid=force_str(urlsafe_base64_decode(self.validated_data['uid']))
         user=User.objects.get(pk=uid)
