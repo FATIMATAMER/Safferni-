@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'trips',
     'userManagement',
     'booking',
+    'contacts',
 
     ###
     'django.contrib.admin',
@@ -168,6 +169,7 @@ REST_FRAMEWORK = {
         'book': '60/hour',
         'company': '60/hour',
         'trip': '60/hour',
+        'contact': '5/month',
     },
 }
 

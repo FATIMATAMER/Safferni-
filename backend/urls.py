@@ -24,5 +24,6 @@ urlpatterns = [
     path('booking/',include('booking.urls')),
     path('trips/',include('trips.urls')),
     path('userManagement/',include('userManagement.urls')),
+    path('contact/',include('contacts.urls')),
     # path('api-auth/', include('rest_framework.urls')),
 ]
