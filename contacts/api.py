@@ -49,11 +49,10 @@ class ContactViewSet(viewsets.ModelViewSet):
         # 2️⃣ Auto-reply to user
         user_subject = "✅ We received your message"
         user_message = (
-            f"Hello {contact.full_name},\n\n"
-            f"Thank you for contacting us. We’ve received your message:\n\n"
+            f"مرحبا {contact.full_name},\n\n"
+            f"شكرا ل تواصلك معنا. لقد تلقينا رسالتك :\n\n"
             f"\"{contact.message}\"\n\n"
-            f"Our team will get back to you as soon as possible.\n\n"
-            f"Best regards,\nThe Support Team\n\n"
+            f"سيتم التواصل معك في اقرب فرصة ممكنة.\n\n"
             f"{settings.FRONTEND_URL}"
         )
         send_mail(
