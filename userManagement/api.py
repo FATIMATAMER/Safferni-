@@ -25,21 +25,21 @@ from django.conf import settings
 
 @api_view(['GET'])
 def api_overview(request):
-     
-	api_urls = {
+    
+    api_urls = {
 
         'auth api overview' : '/',
-		'logout' : '/logout/',
-		'login' : '/login/',
-		'register' : '/register/',
-		'get authenticated user' : '/user/',
+        'logout' : '/logout/',
+        'login' : '/login/',
+        'register' : '/register/',
+        'get authenticated user' : '/user/',
         'get and add users only by admins' : '/get_add_users/',
         'get and add users by id only by admins' : '/get_update_delete_user/<str:pk>/',
         'request':'/password_reset/request',
         'confirm':'/password_reset/confirm/',
-		}
+        }
 
-	return Response(api_urls)
+    return Response(api_urls)
 
 
 class RegistrationView(APIView):
@@ -135,7 +135,7 @@ class LoginView(APIView):
             secure=not settings.DEBUG,
             samesite='Strict'
         )
-  
+    
 
 class LogoutView(APIView):
     """
@@ -225,7 +225,7 @@ class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'PATCH', 'DELETE', 'GET']:
             self.permission_classes = [IsAdminUser]
         return super().get_permissions()    
-  
+    
 
 class UserDetailView(APIView):
     """
@@ -242,27 +242,25 @@ class UserDetailView(APIView):
 
 # Create your views here.
 class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self,request):
-       
-        serializer=PasswordResetRequestSerializer(data=request.data)
+        
+        serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({ "message":"تم إرسال رابط اعادة تعيين كلمة المرور الي بريدك الإلكتروني" },status=200)
-       
-
-         
-
+        
         return Response(serializer.errors,status=400)
     
     
 class PasswordResetConfirmRequestView(APIView):
+    permission_classes = [AllowAny]
     
     def post(self,request):
-        serializer=PasswordResetConfirmSerializer(data=request.data)
+        serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({ "message":" تمت عملية إعادة تعيين كلمة المرور بنجاح" }, status=400)
+            return Response({ "message":" تمت عملية إعادة تعيين كلمة المرور بنجاح" }, status=200)
         
         return Response(serializer.errors,status=400)
-    
-
