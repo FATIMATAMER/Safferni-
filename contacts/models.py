@@ -6,6 +6,7 @@ subject_choices = [
     ("criticism","نقد بناء"),
     ("other","شيء أخر"),
 ]
+
 class Contact(models.Model):
 
     full_name = models.CharField(max_length=200)
@@ -15,4 +16,5 @@ class Contact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} - {self.subject}"
+        return f"{self.full_name} - {self.subject_of_message}"
+    
