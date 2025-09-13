@@ -51,7 +51,6 @@ class ContactViewSet(viewsets.ModelViewSet):
             f"شكرا ل تواصلك معنا. لقد تلقينا رسالتك :\n\n"
             f"\"{contact.message}\"\n\n"
             f"سيتم التواصل معك في اقرب فرصة ممكنة.\n\n"
-            f"{settings.FRONTEND_URL}"
         )
         send_mail(
             user_subject,
