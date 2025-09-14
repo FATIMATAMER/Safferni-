@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, Group
 from phonenumber_field.modelfields import PhoneNumberField
+from django.db import models
 
 # Create your models here.
 
@@ -7,6 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class TypeUser(AbstractUser):
     
     phone_number = PhoneNumberField(blank=False, null=False)
+    email = models.EmailField(unique=True)
     
     def assign_group(self):
 
