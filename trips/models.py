@@ -46,3 +46,4 @@ class Trip(models.Model):
     class Meta:
         verbose_name = "Trip"
         verbose_name_plural = "Trips"
+

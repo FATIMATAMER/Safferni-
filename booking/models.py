@@ -3,6 +3,9 @@ from django.db import models
 from userManagement.models import TypeUser
 from trips.models import Trip
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from userManagement.models import TypeUser
 
 # Create your models here.
 
@@ -74,4 +77,12 @@ class BookingUser(models.Model):
         
         return f"الحجز: {self.user.username} من أجل {self.trip} (المقعد {self.number_of_seats})"
     
-
+    
+@receiver(post_delete, sender=BookingUser)
+def restore_seats_on_booking_delete(sender, instance, **kwargs):
+    trip = instance.trip
+    trip.available_seats += instance.number_of_seats
+    # Ensure available seats never exceed total seats
+    if trip.available_seats > trip.total_seats:
+        trip.available_seats = trip.total_seats
+    trip.save() 
