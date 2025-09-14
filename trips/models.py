@@ -20,8 +20,13 @@ class Trip(models.Model):
     cancelled_at=models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
+
         if self.available_seats is None:
             self.available_seats = self.total_seats
+
+        if self.available_seats > self.total_seats:
+            self.available_seats = self.total_seats
+            
         super().save(*args, **kwargs)
 
     def clean(self):
