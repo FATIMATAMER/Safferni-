@@ -9,6 +9,7 @@ class TypeUser(AbstractUser):
     
     phone_number = PhoneNumberField(blank=False, null=False)
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=200, unique=True)
     
     def assign_group(self):
 
