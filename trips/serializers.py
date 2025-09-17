@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Trip
 from companyManagement.models import Company
 
-
 class TripSerializer(serializers.ModelSerializer):
 
     company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all())
@@ -10,6 +9,16 @@ class TripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'company', 'company_name', 'origin', 'destination', 'departure_date', 'total_seats', 'available_seats', 'price']
-        read_only_fields = ["is_cancelled", "cancel_reason", "cancelled_at"]
-        
+        fields = [
+            'id', 
+            'company', 
+            'company_name', 
+            'origin', 
+            'destination', 
+            'departure_date', 
+            'total_seats', 
+            'available_seats', 
+            'price',
+            'is_cancelled' # <--- قم بإضافته هنا
+        ]
+        read_only_fields = ["cancel_reason", "cancelled_at"] # <--- قم بإزالته من هنا
