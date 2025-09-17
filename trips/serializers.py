@@ -11,3 +11,5 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = ['id', 'company', 'company_name', 'origin', 'destination', 'departure_date', 'total_seats', 'available_seats', 'price']
+        read_only_fields = ["is_cancelled", "cancel_reason", "cancelled_at"]
+        

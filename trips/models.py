@@ -3,6 +3,10 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from companyManagement.models import Company
 
+from django.utils.timezone import now
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 class Trip(models.Model):
     
@@ -28,6 +32,48 @@ class Trip(models.Model):
             
         super().save(*args, **kwargs)
 
+    def cancel(self, reason="تم إلغاء الرحلة من قبل الشركة"):
+        """
+        Cancels the trip, notifies all users, and deletes bookings.
+        """
+        if self.is_cancelled:
+            return False  # already cancelled
+
+        # Mark trip cancelled
+        self.is_cancelled = True
+        self.cancel_reason = reason
+        self.cancelled_at = now()
+        self.save()
+
+        # Get all bookings
+        bookings = self.bookings.select_related("user")
+
+        for booking in bookings:
+            user = booking.user
+
+            # Send notification
+            message = f"""
+            عزيزي {user.first_name},
+
+            نأسف لإلغاء رحلتك رقم {self.pk}.
+            السبب: {self.cancel_reason}
+
+            شكراً لتفهمك.
+            """
+
+            send_mail(
+                subject="إلغاء الرحلة",
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+
+        # Delete bookings after notifying
+        bookings.delete()
+
+        return True
+    
     def clean(self):
         if self.total_seats <= 0:
             raise ValidationError("عدد المقاعد الكلي يجب ان يكون أكبر من 0 .")
@@ -45,7 +91,7 @@ class Trip(models.Model):
          ).first()
 
     def __str__(self):
-        return f"{self.destination} → {self.origin} ({self.departure_date}) - {self.company.company_name}"
+        return f"{self.pk} {self.destination} → {self.origin} ({self.departure_date}) - {self.company.company_name}"
 
     class Meta:
         verbose_name = "Trip"
